@@ -64,6 +64,10 @@ func (c *Client) Cameras() ([]*Camera, error) {
 		Host:   fmt.Sprintf("%s:%d", c.host, c.port),
 		Path:   "/api/v1/cameras",
 	}
+	if c.token != "" {
+		cameraURL.RawQuery = url.Values{"token": []string{c.token}}.Encode()
+	}
+
 	resp, err := http.Get(cameraURL.String())
 	if err != nil {
 		return nil, fmt.Errorf("could not complete request: %w", err)
@@ -89,11 +93,14 @@ func (c *Client) Cameras() ([]*Camera, error) {
 // Snapshot returns a live snapshot (JPEG bytes) of the camera with the given id
 func (c *Client) Snapshot(id int) ([]byte, error) {
 	snapshotURL := &url.URL{
-		Scheme:   c.proto,
-		Host:     fmt.Sprintf("%s:%d", c.host, c.port),
-		Path:     fmt.Sprintf("/api/v1/video/%d/keyframe", id),
-		RawQuery: url.Values{"token": []string{c.token}}.Encode(),
+		Scheme: c.proto,
+		Host:   fmt.Sprintf("%s:%d", c.host, c.port),
+		Path:   fmt.Sprintf("/api/v1/video/%d/keyframe", id),
 	}
+	if c.token != "" {
+		snapshotURL.RawQuery = url.Values{"token": []string{c.token}}.Encode()
+	}
+
 	resp, err := http.Get(snapshotURL.String())
 	if err != nil {
 		return nil, fmt.Errorf("could not complete request: %w", err)

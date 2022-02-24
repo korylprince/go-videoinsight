@@ -95,6 +95,9 @@ func (c *Client) Servers() ([]*Server, error) {
 		Host:   fmt.Sprintf("%s:%d", c.host, c.port),
 		Path:   "/api/v1/server",
 	}
+	if c.token != "" {
+		serverURL.RawQuery = url.Values{"token": []string{c.token}}.Encode()
+	}
 	resp, err := http.Get(serverURL.String())
 	if err != nil {
 		return nil, fmt.Errorf("could not complete request: %w", err)
