@@ -46,6 +46,7 @@ type Camera struct {
 	Name                 string
 	IPAddress            net.IP
 	Model                string
+	Manufacturer         string
 	ServerID             int
 	Type                 string `json:"CameraType"`
 	Is360                bool
